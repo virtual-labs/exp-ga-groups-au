@@ -2,37 +2,72 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "This is a Sample Question 1?",
+      "question": "1. Which step in a Genetic Algorithm ensures genetic diversity and prevents premature convergence ?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "Selection",
+        "b": "Crossover",
+        "c": "Mutation",
+        "d": "Fitness Function"
       },
-      "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
-      },
-      "correctAnswer": "a",
+      
+      "correctAnswer": "c",
       "difficulty": "beginner"
     },
+    
+    
     {
-      "question": "This is a Sample Question 2?",
+      "question": "2. The major advantage of using Genetic Algorithms for gene expression analysis compared to traditional clustering methods ?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "GAs strictly follow a fixed set of clustering rules",
+        "b": "GAs explore a broader search space and dynamically optimize clustering criteria",
+        "c": "GAs require no computational power to execute",
+        "d": "GAs always produce the same clustering results in every run"
       },
-      "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+      
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+
+
+    {
+      "question": "3. How does a fitness function contribute to gene clustering in Genetic Algorithms (GAs) ?",
+      "answers": {
+        "a": "It randomly assigns genes to clusters",
+        "b": "It evaluates the quality of clustering solutions by optimizing intra-group similarity and inter-group distinctiveness",
+        "c": "It eliminates genes with low expression levels",
+        "d": "It selects genes based on their DNA sequence"
       },
-      "correctAnswer": "c",
+      
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+
+
+
+    {
+      "question": "4. In the context of gene expression analysis, what does the crossover process in GAs achieve ?",
+      "answers": {
+        "a": "RiboIt combines genetic material from two parent solutions to create a new solutionsome",
+        "b": "ChromoIt eliminates genes with low expression valuessome",
+        "c": "MitocIt replaces existing solutions with randomly generated oneshondria",
+        "d": "It permanently fixes cluster assignments"
+      },
+      
+      "correctAnswer": "a",
+      "difficulty": "beginner"
+    }, 
+        
+    
+    {
+      "question": "5. Genetic Algorithms can be applied in biomedical research for",
+      "answers": {
+        "a": "Predicting disease risk based on genetic mutations",
+        "b": "Designing synthetic DNA sequences for gene editing",
+        "c": "Automating laboratory experiments without human input",
+        "d": "Directly sequencing DNA samples"
+      },
+
+      "correctAnswer": "a",
       "difficulty": "beginner"
     }
   ]
