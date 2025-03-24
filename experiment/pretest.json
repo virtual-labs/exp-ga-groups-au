@@ -2,37 +2,72 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "This is a Sample Question 1?",
+      "question": "1. A gene is:",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "A segment of RNA that codes for carbohydrates",
+        "b": "A segment of DNA that contains instructions for making proteins",
+        "c": "A protein that helps in DNA replication",
+        "d": "A structure that stores lipids"
       },
-      "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+      
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    
+    
+    {
+      "question": "2. Which of the following correctly describes the flow of genetic information in a cell? ",
+      "answers": {
+        "a": "RNA → DNA → Protein",
+        "b": "Protein → RNA → DNA",
+        "c": "DNA → RNA → Protein",
+        "d": "DNA → Protein → RNA"
       },
+      
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+
+
+    {
+      "question": "3. The primary goal of gene expression analysis is:",
+      "answers": {
+        "a": "To study how genes are transcribed into RNA and regulated in biological conditions",
+        "b": "To determine the DNA sequence of a gene",
+        "c": "To modify genes in living organisms",
+        "d": "To analyse protein structures"
+      },
+      
       "correctAnswer": "a",
       "difficulty": "beginner"
     },
+
+
+
     {
-      "question": "This is a Sample Question 2?",
+      "question": "4. The structure contains multiple genes organized in a linear sequence is",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "Ribosome",
+        "b": "Chromosome",
+        "c": "Mitochondria",
+        "d": "RNA"
       },
-      "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+      
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    }, 
+        
+    
+    {
+      "question": "5. Which of the following is NOT a commonly used method for gene expression analysis?",
+      "answers": {
+        "a": "Serial Analysis of Gene Expression (SAGE)",
+        "b": "Microarrays",
+        "c": "RNA Sequencing (RNA-Seq)",
+        "d": "Polymerase Chain Reaction (PCR)"
       },
-      "correctAnswer": "c",
+
+      "correctAnswer": "d",
       "difficulty": "beginner"
     }
   ]
