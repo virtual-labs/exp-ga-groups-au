@@ -4,11 +4,10 @@
 <b>Discipline | <b>Biotechnology and Biomedical Engineering
 :--|:--|
 <b> Lab | <b> Introduction to Bioinformatics Algorithms
-<b> Experiment|     <b> Exploring the Viterbi Algorithm for Exon - Intron Prediction
-
+<b> Experiment|     <b> Determining Groups for Expression Analysis Using Genetic Algorithm (GA)
 ### About the Experiment 
 
-The Viterbi algorithm, a dynamic programming approach, is widely used in computational biology for decoding hidden states in sequence data. This experiment explores the application of a Hidden Markov Model (HMM) to predict exon-intron boundaries in a given DNA sequence.
+Determining Groups for Expression Analysis Using Genetic Algorithm (GA) is a method that uses a computational approach to group gene expression data efficiently. Inspired by natural selection, GA helps find the best groupings by improving patterns in the data. This approach reduces errors, enhances accuracy, and is useful in areas like genomics and disease research.
 
 <b>Name of Developer | <b> Dr. Shyam Diwakar 
 :--|:--|
