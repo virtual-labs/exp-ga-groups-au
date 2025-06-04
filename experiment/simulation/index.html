@@ -1,80 +1,220 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gene Clustering GA</title>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
-    <link rel="stylesheet" href="./css/main.css">
     <style>
-       
-       .controls {
-            margin: 20px 0;
+        /* Base Styles */
+        :root {
+            --primary-color:  #25253d;
+            --secondary-color: #4f2037;
+            --background-light: #f8f9fa;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500vh;
+            margin: 20px auto;
             padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            background-color: white;
+            background-image: linear-gradient(white, #7172a8);
+            min-height: 100vh;
         }
-        .param {
-            margin: 10px 0;
-        }
-        .param label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        #plot {
-            margin-top: 1px;
-            width: 100%;
-            height: 600px;
-        }
-        #results { 
-            margin-top: 20px; 
-            padding: 10px; 
-            border: 1px solid #ddd; 
-        }
-        .loader-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 25vh; /* Adjust based on your layout */
-}
 
-.loader {
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #3498db;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    animation: spin 1s linear infinite;
-    display: none;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-        .error { color: red; margin: 10px 0; }
-        .result-card {
-            background: #f8f9fa;
-            border-radius: 8px;
+        .container {
+            width: 95%;
+            max-width: 1500px;
+            margin: 0 auto;
             padding: 15px;
-            margin-bottom: 15px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .header img {
+            height: 60px;
+            max-width: 100%;
+        }
+
+        .at-item {
+            color: var(--secondary-color);
+            font-weight: bold;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            flex: 1;
+            min-width: min(90vw, 300px);
+        }
+
+        /* Main Content Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Controls Section */
+        .controls {
+            background: var(--background-light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            background-color: #e6e6f1;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .cluster-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-        }
-        .caption{
-           font-size: 0.75em;
-           margin-top: -1%;
-           margin-left: -10%;
-        }
-        input[type="button"] {
-    cursor: pointer;
-   
-}
 
+        .param-group {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .param-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        label.param-label {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        label {
+            padding: 10px 20px;
+            background-color: 	 #25253d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            justify-content: center;
+            font-family: sans-serif;   
+            display: inline-block;  /* Change display type */
+            width: 90%;       
+            text-align: center;
+        }
+
+       
+        input[type="number"] {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            max-width: 150px;
+        }
+
+        button {
+            background-color: #25253d;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+            font-size: 1rem;
+            margin: 1rem 0;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            background-color: #43435c;
+        }
+
+        /* Results Section */
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        #plot {
+            width: 100%;
+            height: 400px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        /* Info Sections */
+        .instructions, .overview {
+            background: var(--background-light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            background-color:#e6e6f1;
+        }
+
+        .info-section h3 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .param-row {
+                grid-template-columns: 1fr;
+            }
+            
+            input[type="number"] {
+                max-width: 100%;
+            }
+            
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 100%;
+                padding: 10px;
+            }
+            
+            button {
+                width: 100%;
+                margin: 0.5rem 0;
+            }
+        }
+
+        /* Existing Component Styles */
+        .loader-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 25vh;
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #25253d;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result-card {
+            background: var(--background-light);
+            padding: .5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
         #myDIV ,#myDIV1,#myDIV2,#myDIV3 {
             width: 100%;
             padding: 50px 0;
@@ -84,143 +224,217 @@
             margin-top: -3%;
             
         }
-        #t1 {
-  tab-size: 4;
-}
-            
-        .textarea{
-            border: black;
-            width: 100%;
-            align-items: center;
-        }
-        .txt_con{
-            margin-left: -20%;
-        }
-        .result-card {
-    background: #f8f9fa;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 15px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
 
-
-.cluster-label {
-    font-weight: 600;
-    color: #2c3e50;
+        .modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
 }
 
-.cluster-size {
-    color: #7f8c8d;
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
 }
 
-.summary {
-    margin-top: 20px;
-    padding: 15px;
-    background: #e8f4f8;
-    border-radius: 8px;
-}
-
-h3, h4 {
-    color: #2c3e50;
-    margin: 0 0 10px 0;
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
 }
     </style>
 </head>
 <body>
     <div class="container">
-    <img src="images\logo.png" width="130" height="60" style="vertical-align:middle;margin:8px">
-    <div class='at-item'>Determining groups for Expression Analysis using Genetic algorithm (GA)</div><br>
-    
-    
-        <div class="controls">
-            <table style="width:100%;">
-                <tr>
-                    <td style="width: 30%;">
-                        <label style="font-weight: bold;">&nbsp;&nbsp;&nbsp;Instructions&nbsp;&nbsp;&nbsp;</label><br><br>
-                        <p style="font-size: 0.90em;text-align: left;margin-left: 10%;" >1. Upload Data File: Click "Choose file" to upload your input file (.txt format).</p><p style="font-size: 0.90em;text-align: left;margin-left: 10%;">2. Download Sample Template: Click "Sample file" to obtain a sample text file format reference.</p><p style="font-size: 0.90em;text-align: left;margin-left: 10%;">3. Review Parameters: Check the definitions of: Population Size, Mutation Rate, Generation, Number of Clusters</p><p style="font-size: 0.90em;text-align: left;margin-left: 10%;">4. Adjust parameter values to your preferences.</p><p style="font-size: 0.90em;text-align: left;margin-left: 10%;">5. Click "Run" to start the algorithm and view results.</p><p style="font-size: 0.90em;text-align: left;margin-left: 10%;">6. Use the "Reset" button to clear inputs and refresh the simulator.</p><br><br><br><br><br><br><br>
-                        
-                    <td style="width: 40%;">
-                        <div class="content_align">
-                            <label>Upload the file:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                            <input type="file" id="softFile" accept=".txt"><br>
-                            <div class="caption">Supported file formats: plain text (.txt)&nbsp;&nbsp;&nbsp;
-                                <a href="sample.txt" download="images/sample_file.txt">Sample File in .text format</a>
-                            </div><br><br>
-                            </div>
-                            <input type="button" id="ps" onclick="ps()" hidden/>
-                            <label for="ps">Population Size:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                            <input type="number" id="populationSize" value="50" min="10" max="50">
-                            <div id="myDIV" style="display: none;">
-                                <textarea id="file-content" cols="35" rows="5">Population size: The number of candidate solutions maintained in each generation of the GA.</textarea>
-                            </div><br><br><br>
-            
-                            <input type="button" id="gen" onclick="gen()" hidden/>
-                            <label for="gen">Generations:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                            <input type="number" id="generations" value="100" min="10" max="100">
-                            <div id="myDIV1" style="display: none;">
-                                <textarea id="file-content1" cols="35" rows="5">Generation: The number of times the GA iterates/evolves the population.</textarea>
-                            </div><br><br><br>
-            
-                            <input type="button" id="mr" onclick="mr()" hidden/>
-                            <label for="mr">Mutation Rate (%):&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                            <input type="number" id="mutationRate" value="10" min="0" max="10">
-                            <div id="myDIV2" style="display: none;">
-                                <textarea id="file-content2" cols="35" rows="5">Mutation Rate : The probability of randomly changing a gene’s cluster assignment during evolution.</textarea>
-                            </div><br><br><br>
-            
-                            <input type="button" id="nc" onclick="nc()" hidden/>
-                            <label for="nc">Number of clusters:&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                            <input type="number" id="numClusters" value="5" min="2" max="5">
-                            <div id="myDIV3" style="display: none;">
-                                <textarea id="file-content3" cols="35" rows="5">Number of clusters : The predefined number of  groups the genes should be divided into based on their expression patterns.</textarea>
-                            </div><br><br><br>&ensp; &ensp; &ensp; &ensp; 
-                            
-                            <button onclick="location.reload()">Reset</button>&ensp; &ensp; &ensp; &ensp; &ensp; &ensp;  
-                            <button onclick="runGA();ov()">Run</button>
-                           
-                        </div>
-                    </td>
-                    <td style="width: 30%;">
-                        <div id="ov" style="display: none;"><br><br><br>
-                        <label style="font-weight: bold;">&nbsp;&nbsp;&nbsp;Genetic Algorithm (GA) Overview&nbsp;&nbsp;&nbsp;</label><br><br><p style="font-size: 0.90em;text-align: left;margin-left: 10%;">The algorithm follows these steps:</p>
-                        <p style="font-size: 0.90em;text-align: left;margin-left: 10%;">1. <b>Initialization</b> : Creates a random population of cluster assignments.</p>
-                        <p style="font-size: 0.90em;text-align: left;margin-left: 10%">2. <b>Fitness Evaluation</b> : Measures how well each clustering groups similar gene expressions.</p>
-                        <img src="images\eqn.png" width="300" height="50" style="vertical-align:middle;margin:8px">
-                       <p style="font-size: 0.90em;text-align: left;margin-left: 12%"><i>a. Intra-Cluster Similarity: Minimize distances between genes within the same cluster.<br>
+        <div class="header">
+            <img src="images\logo.png" alt="App Logo" style="height: 60px">
+            <div class="at-item">Determining groups for Expression Analysis using Genetic algorithm (GA)</div>
+        </div>
 
-                        b. Inter-Cluster Differences: Maximize distances between cluster centers.</i></p>
-
-                        <p style="font-size: 0.90em;text-align: left;margin-left: 10%">3. <b>Selection</b> : Chooses the best cluster assignments for breeding.</p>
-                        <p style="font-size: 0.90em;text-align: left;margin-left: 10%">4. <b>Crossover</b> : Combines parts of two good solutions to create new solutions.</p>
-                        <p style="font-size: 0.90em;text-align: left;margin-left: 10%">5. <b>Mutation</b> : Randomly changes cluster assignments to explore new solutions.</p>
-                        <p style="font-size: 0.90em;text-align: left;margin-left: 10%">6. <b>Iteration</b> : Repeats the process for a set number of generations.</p>
-                        <p style="font-size: 0.90em;text-align: left;margin-left: 10%">7. <b>Final Output</b> : The best clustering found.</p>
-                        </td>
-                        </td>
-                </tr>
-            </table>
-           
-        
-        
-        
-        <div id="error" class="error"></div>
-        <table style="width:100%;">
-        <tr>
-            <td style="width: 70%;">
-                <div class="loader-container">
-                    <div class="loader" id="loader"></div>
+        <div class="main-grid">
+            <div class="instructions">
+                <label>Instructions</label>
+                <p>1. Upload Data File: Click "Choose file" to upload your input file (.txt format).</p>
+                <p>2. Download Sample Template: Get the sample text file format reference.</p>
+                <p>3. Review Parameters: Check definitions of Population Size, Mutation Rate, Generation, and Number of Clusters</p>
+                <p>4. Adjust parameter values to your preferences.</p>
+                <p>5. Click "Run" to start the algorithm and view results.</p>
+                <p>6. Use the "Reset" button to clear inputs and refresh the simulator.</p>
+                
             </div>
-        <div id="plot"></div>
-            </td>
-            <td style="width: 30%;">
-        <div id="results"></div>
-        </td>
-        </tr>
-    </table>
+
+            <div class="controls">
+                <div class="param-group">
+                    <div class="param-row">
+                        <label class="param-label">Upload the file:</label>
+                        <input type="file" id="softFile" accept=".txt">
+                        
+                            <a href="sample.txt" download="sample_file.txt" ><small>Sample File</small></a>
+                      
+                    </div>
+                    
+                    <div class="param-row">
+                        <button id="ps">Population Size:</button>
+                            <div id="myModal" class="modal">
+                                 <!-- Modal content -->
+                                <div class="modal-content">
+                                    <span class="close">&times;</span>
+                                    <p>Population size: The number of candidate solutions maintained in each generation of the GA.</p>
+                                </div>
+                            </div>
+                            <input type="number" id="populationSize" value="50" min="10" max="50">
+
+                </div>
+                    <div class="param-row">
+                        <button id="gen">Generations:</button>
+                        <div id="myModal1" class="modal">
+                            <!-- Modal content -->
+                           <div class="modal-content">
+                               <span class="close">&times;</span>
+                               <p>Generation: The number of times the GA iterates/evolves the population.</p>
+                            </div>
+                        </div>
+                                <input type="number" id="generations" value="100" min="10" max="100">
+                    </div>
+
+                    <div class="param-row">
+                        <button id="mr">Mutation Rate (%):</button>
+                        <div id="myModal2" class="modal">
+                            <div class="modal-content">
+                                <span class="close">&times;</span>
+                                <p>Mutation Rate : The probability of randomly changing a gene’s cluster assignment during evolution.</p>
+                             </div>
+                         </div>
+                        <input type="number" id="mutationRate" value="10" min="0" max="10">
+                    </div>
+
+                    <div class="param-row">
+                        <button id="nc">Number of Clusters:</button>
+                        <div id="myModal3" class="modal">
+                            <div class="modal-content">
+                                <span class="close">&times;</span>
+                                <p>Number of clusters : The predefined number of  groups the genes should be divided into based on their expression patterns.</p>
+                             </div>
+                         </div>
+                        <input type="number" id="numClusters" value="5" min="2" max="5">
+                    </div>
+
+                    <div class="param-row" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <button onclick="location.reload()">Reset</button>
+                        <button onclick="runGA();ov()">Run</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="overview" id="ov" style="display: none;">
+                <h3>Genetic Algorithm (GA) Overview</h3>
+                <p>The algorithm follows these steps:</p>
+                <ol>
+                    <li><strong>Initialization:</strong> Creates random population of cluster assignments</li>
+                    <li><strong>Fitness Evaluation:</strong> Measures clustering quality
+                        <img src="images\eqn.png" alt="Equation" style="width: 100%; max-width: 300px; margin: 1rem 0;">
+                    </li>
+                    <li><strong>Selection:</strong> Chooses best solutions for breeding</li><br>
+                    <li><strong>Crossover:</strong> Combines parent solutions</li><br>
+                    <li><strong>Mutation:</strong> Introduces random changes</li><br>
+                    <li><strong>Iteration:</strong> Repeats for set generations</li><br>
+                    <li><strong>Output:</strong> Returns best clustering found</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="results-grid">
+            <div id="plot"></div>
+            <div class="loader" id="loader"></div>
+            <div id="results" class="result-card"></div> 
+            
+        </div>
+
+       
+        <div id="error" class="error"></div>
     </div>
 
     <script>
+
+var modal = document.getElementById("myModal");
+var modal1 = document.getElementById("myModal1");
+var modal2 = document.getElementById("myModal2");
+var modal3 = document.getElementById("myModal3");
+
+// Get the button that opens the modal
+var btn = document.getElementById("ps");
+var btn1 = document.getElementById("gen");
+var btn2 = document.getElementById("mr");
+var btn3 = document.getElementById("nc");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+var modals = document.querySelectorAll('.modal');
+
+// Get all close buttons
+var closeButtons = document.querySelectorAll('.close');
+
+// Add click handlers to all close buttons
+closeButtons.forEach(function(closeBtn) {
+    closeBtn.onclick = function() {
+        this.closest('.modal').style.display = "none";
+    };
+});
+
+// Handle clicks outside modal content
+window.onclick = function(event) {
+    modals.forEach(function(modal) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+};
+
+// Original button handlers remain the same
+document.getElementById("ps").onclick = function() {
+    document.getElementById("myModal").style.display = "block";
+};
+document.getElementById("gen").onclick = function() {
+    document.getElementById("myModal1").style.display = "block";
+};
+document.getElementById("mr").onclick = function() {
+    document.getElementById("myModal2").style.display = "block";
+};
+document.getElementById("nc").onclick = function() {
+    document.getElementById("myModal3").style.display = "block";
+};
+
+
+
+
+        // Add resize listener for plot
+        window.addEventListener('resize', function() {
+            if (document.getElementById('plot')) {
+                Plotly.Plots.resize(document.getElementById('plot'));
+            }
+        });
+
+
         function ps() {
             var x = document.getElementById("myDIV");
             if (x.style.display === "none") {
