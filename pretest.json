@@ -1,0 +1,74 @@
+{
+  "version": 2.0,
+  "questions": [
+    {
+      "question": "1. A gene is:",
+      "answers": {
+        "a": "A segment of RNA that codes for carbohydrates",
+        "b": "A segment of DNA that contains instructions for making proteins",
+        "c": "A protein that helps in DNA replication",
+        "d": "A structure that stores lipids"
+      },
+      
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    
+    
+    {
+      "question": "2. Which of the following correctly describes the flow of genetic information in a cell? ",
+      "answers": {
+        "a": "RNA → DNA → Protein",
+        "b": "Protein → RNA → DNA",
+        "c": "DNA → RNA → Protein",
+        "d": "DNA → Protein → RNA"
+      },
+      
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+
+
+    {
+      "question": "3. The primary goal of gene expression analysis is:",
+      "answers": {
+        "a": "To study how genes are transcribed into RNA and regulated in biological conditions",
+        "b": "To determine the DNA sequence of a gene",
+        "c": "To modify genes in living organisms",
+        "d": "To analyse protein structures"
+      },
+      
+      "correctAnswer": "a",
+      "difficulty": "beginner"
+    },
+
+
+
+    {
+      "question": "4. The structure contains multiple genes organized in a linear sequence is",
+      "answers": {
+        "a": "Ribosome",
+        "b": "Chromosome",
+        "c": "Mitochondria",
+        "d": "RNA"
+      },
+      
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    }, 
+        
+    
+    {
+      "question": "5. Which of the following is NOT a commonly used method for gene expression analysis?",
+      "answers": {
+        "a": "Serial Analysis of Gene Expression (SAGE)",
+        "b": "Microarrays",
+        "c": "RNA Sequencing (RNA-Seq)",
+        "d": "Polymerase Chain Reaction (PCR)"
+      },
+
+      "correctAnswer": "d",
+      "difficulty": "beginner"
+    }
+  ]
+}
