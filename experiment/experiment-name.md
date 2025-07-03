@@ -1,1 +1,1 @@
-## Determining Groups for Expression Analysis Using Genetic Algorithm (GA)
+## Determining Groups for Gene Expression Analysis Using Genetic Algorithm (GA)
