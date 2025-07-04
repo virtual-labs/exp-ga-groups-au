@@ -5,17 +5,15 @@
     <title>Gene Clustering GA</title>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <style>
-        /* Base Styles */
         :root {
-            --primary-color:  #25253d;
+            --primary-color: #25253d;
             --secondary-color: #4f2037;
             --background-light: #f8f9fa;
         }
 
         body {
             font-family: Arial, sans-serif;
-            max-width: 500vh;
-            margin: 20px auto;
+            margin: 0;
             padding: 20px;
             background-color: white;
             background-image: linear-gradient(white, #7172a8);
@@ -31,7 +29,6 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        /* Header */
         .header {
             display: flex;
             align-items: center;
@@ -53,7 +50,6 @@
             min-width: min(90vw, 300px);
         }
 
-        /* Main Content Grid */
         .main-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -61,7 +57,6 @@
             margin-bottom: 2rem;
         }
 
-        /* Controls Section */
         .controls {
             background: var(--background-light);
             padding: 1.5rem;
@@ -90,20 +85,20 @@
             font-size: 0.9rem;
             text-align: center;
         }
+        
         label {
             padding: 10px 20px;
-            background-color: 	 #25253d;
+            background-color: #25253d;
             color: white;
             border: none;
             border-radius: 5px;
             justify-content: center;
             font-family: sans-serif;   
-            display: inline-block;  /* Change display type */
+            display: inline-block;
             width: 90%;       
             text-align: center;
         }
 
-       
         input[type="number"] {
             width: 100%;
             padding: 0.5rem;
@@ -129,7 +124,6 @@
             background-color: #43435c;
         }
 
-        /* Results Section */
         .results-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -137,14 +131,31 @@
             margin-top: 2rem;
         }
 
-        #plot {
+        .cluster-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            margin-top: 20px;
+        }
+        
+        .plot-area {
+            height: 500px;
             width: 100%;
-            height: 400px;
+            margin-bottom: 30px;
             background: white;
             border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .pca-explanation {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 10px 15px;
+            margin-top: 10px;
+            font-size: 14px;
+            border-radius: 4px;
         }
 
-        /* Info Sections */
         .instructions, .overview {
             background: var(--background-light);
             padding: 1.5rem;
@@ -157,7 +168,6 @@
             margin-bottom: 1rem;
         }
 
-        /* Responsive Adjustments */
         @media (max-width: 768px) {
             .param-row {
                 grid-template-columns: 1fr;
@@ -170,6 +180,10 @@
             .header {
                 flex-direction: column;
                 text-align: center;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -185,14 +199,6 @@
             }
         }
 
-        /* Existing Component Styles */
-        .loader-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 25vh;
-        }
-
         .loader {
             border: 4px solid #f3f3f3;
             border-top: 4px solid #25253d;
@@ -201,6 +207,7 @@
             height: 30px;
             animation: spin 1s linear infinite;
             display: none;
+            margin: 0 auto;
         }
 
         @keyframes spin {
@@ -210,63 +217,69 @@
 
         .result-card {
             background: var(--background-light);
-            padding: .5rem;
+            padding: 1rem;
             border-radius: 8px;
             margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
-        #myDIV ,#myDIV1,#myDIV2,#myDIV3 {
-            width: 100%;
-            padding: 50px 0;
-            text-align: center;
-            border: black;
-            font-size: 0.75em;
-            margin-top: -3%;
-            
+        #results-text {
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 1rem;
         }
 
         .modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-/* Modal Content */
-.modal-content {
-  background-color: #fefefe;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-}
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+        }
 
-/* The Close Button */
-.close {
-  color: #aaaaaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
 
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-}
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .error {
+            color: red;
+            padding: 10px;
+            margin: 10px 0;
+            display: none;
+            background: #ffecec;
+            border: 1px solid #ffb3b3;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <img src="images\logo.png" alt="App Logo" style="height: 60px">
+            <img src="logo.png" alt="App Logo" style="height: 60px">
             <div class="at-item">Determining groups for Expression Analysis using Genetic algorithm (GA)</div>
         </div>
 
@@ -274,12 +287,11 @@
             <div class="instructions">
                 <label>Instructions</label>
                 <p>1. Upload Data File: Click "Choose file" to upload your input file (.txt format).</p>
-                <p>2. Download  Template: Get the  text file format reference.</p>
+                <p>2. Download Sample Template: Get the sample text file format reference.</p>
                 <p>3. Review Parameters: Check definitions of Population Size, Mutation Rate, Generation, and Number of Clusters</p>
                 <p>4. Adjust parameter values to your preferences.</p>
                 <p>5. Click "Run" to start the algorithm and view results.</p>
                 <p>6. Use the "Reset" button to clear inputs and refresh the simulator.</p>
-                
             </div>
 
             <div class="controls">
@@ -287,60 +299,32 @@
                     <div class="param-row">
                         <label class="param-label">Upload the file:</label>
                         <input type="file" id="softFile" accept=".txt">
-                        
-                            <a href="sample.txt" download="sample_file.txt" ><small>Sample File</small></a>
-                      
+                         <a href="sample.txt" download="sample_file.txt" ><small>Sample File</small></a>
                     </div>
                     
                     <div class="param-row">
                         <button id="ps">Population Size:</button>
-                            <div id="myModal" class="modal">
-                                 <!-- Modal content -->
-                                <div class="modal-content">
-                                    <span class="close">&times;</span>
-                                    <p>Population size: The number of candidate solutions maintained in each generation of the GA.</p>
-                                </div>
-                            </div>
-                            <input type="number" id="populationSize" value="50" min="10" max="50">
-
-                </div>
+                        <input type="number" id="populationSize" value="50" min="10" max="50">
+                    </div>
+                    
                     <div class="param-row">
                         <button id="gen">Generations:</button>
-                        <div id="myModal1" class="modal">
-                            <!-- Modal content -->
-                           <div class="modal-content">
-                               <span class="close">&times;</span>
-                               <p>Generation: The number of times the GA iterates/evolves the population.</p>
-                            </div>
-                        </div>
-                                <input type="number" id="generations" value="100" min="10" max="100">
+                        <input type="number" id="generations" value="100" min="10" max="100">
                     </div>
 
                     <div class="param-row">
                         <button id="mr">Mutation Rate (%):</button>
-                        <div id="myModal2" class="modal">
-                            <div class="modal-content">
-                                <span class="close">&times;</span>
-                                <p>Mutation Rate : The probability of randomly changing a gene’s cluster assignment during evolution.</p>
-                             </div>
-                         </div>
                         <input type="number" id="mutationRate" value="10" min="0" max="10">
                     </div>
 
                     <div class="param-row">
                         <button id="nc">Number of Clusters:</button>
-                        <div id="myModal3" class="modal">
-                            <div class="modal-content">
-                                <span class="close">&times;</span>
-                                <p>Number of clusters : The predefined number of  groups the genes should be divided into based on their expression patterns.</p>
-                             </div>
-                         </div>
                         <input type="number" id="numClusters" value="5" min="2" max="5">
                     </div>
 
                     <div class="param-row" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
                         <button onclick="location.reload()">Reset</button>
-                        <button onclick="runGA();ov()">Run</button>
+                        <button onclick="runGA()">Run</button>
                     </div>
                 </div>
             </div>
@@ -349,9 +333,9 @@
                 <h3>Genetic Algorithm (GA) Overview</h3>
                 <p>The algorithm follows these steps:</p>
                 <ol>
-                    <li><strong>Initialization:</strong> Creates random population of cluster assignments</li>
+                    <li><strong>Initialization:</strong> Creates random population of cluster assignments</li><br>
                     <li><strong>Fitness Evaluation:</strong> Measures clustering quality
-                        <img src="images\eqn.png" alt="Equation" style="width: 100%; max-width: 300px; margin: 1rem 0;">
+                        <img src="eqn.png" alt="Equation" style="width: 100%; max-width: 300px; margin: 1rem 0;">
                     </li>
                     <li><strong>Selection:</strong> Chooses best solutions for breeding</li><br>
                     <li><strong>Crossover:</strong> Combines parent solutions</li><br>
@@ -362,131 +346,128 @@
             </div>
         </div>
 
-        <div class="results-grid">
-            <div id="plot"></div>
+         <div class="results-grid">
+        
+        <div class="cluster-container">
             <div class="loader" id="loader"></div>
-            <div id="results" class="result-card"></div> 
-            
+            <div id="progress-plot" class="plot-area"></div>
+            <div id="cluster-plot" class="plot-area"></div>
+            <div class="pca-explanation">
+                <p><strong>Principal Component 1 (PC1):</strong> Direction of maximum variance in gene expression patterns</p>
+                <p><strong>Principal Component 2 (PC2):</strong> Second most important direction of variance (orthogonal to PC1)</p>
+            </div>
         </div>
-
-       
+        
+        <div id="results-text" class="result-card"></div>
+        </div>
         <div id="error" class="error"></div>
     </div>
 
+    <!-- Modals for parameter explanations -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Population size: The number of candidate solutions maintained in each generation of the GA.</p>
+        </div>
+    </div>
+    
+    <div id="myModal1" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Generation: The number of times the GA iterates/evolves the population.</p>
+        </div>
+    </div>
+    
+    <div id="myModal2" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Mutation Rate: The probability of randomly changing a gene's cluster assignment during evolution.</p>
+        </div>
+    </div>
+    
+    <div id="myModal3" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Number of clusters: The predefined number of groups the genes should be divided into based on their expression patterns.</p>
+        </div>
+    </div>
+
     <script>
-
-var modal = document.getElementById("myModal");
-var modal1 = document.getElementById("myModal1");
-var modal2 = document.getElementById("myModal2");
-var modal3 = document.getElementById("myModal3");
-
-// Get the button that opens the modal
-var btn = document.getElementById("ps");
-var btn1 = document.getElementById("gen");
-var btn2 = document.getElementById("mr");
-var btn3 = document.getElementById("nc");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-var modals = document.querySelectorAll('.modal');
-
-// Get all close buttons
-var closeButtons = document.querySelectorAll('.close');
-
-// Add click handlers to all close buttons
-closeButtons.forEach(function(closeBtn) {
-    closeBtn.onclick = function() {
-        this.closest('.modal').style.display = "none";
-    };
-});
-
-// Handle clicks outside modal content
-window.onclick = function(event) {
-    modals.forEach(function(modal) {
-        if (event.target === modal) {
-            modal.style.display = "none";
-        }
-    });
-};
-
-// Original button handlers remain the same
-document.getElementById("ps").onclick = function() {
-    document.getElementById("myModal").style.display = "block";
-};
-document.getElementById("gen").onclick = function() {
-    document.getElementById("myModal1").style.display = "block";
-};
-document.getElementById("mr").onclick = function() {
-    document.getElementById("myModal2").style.display = "block";
-};
-document.getElementById("nc").onclick = function() {
-    document.getElementById("myModal3").style.display = "block";
-};
-
-
-
-
-        // Add resize listener for plot
-        window.addEventListener('resize', function() {
-            if (document.getElementById('plot')) {
-                Plotly.Plots.resize(document.getElementById('plot'));
-            }
+        // Modal handling
+        const modals = {
+            'ps': document.getElementById('myModal'),
+            'gen': document.getElementById('myModal1'),
+            'mr': document.getElementById('myModal2'),
+            'nc': document.getElementById('myModal3')
+        };
+        
+        // Get all close buttons
+        const closeButtons = document.querySelectorAll('.close');
+        
+        // Add click handlers to all close buttons
+        closeButtons.forEach(function(closeBtn) {
+            closeBtn.onclick = function() {
+                this.closest('.modal').style.display = "none";
+            };
         });
-
-
-        function ps() {
-            var x = document.getElementById("myDIV");
-            if (x.style.display === "none") {
-                x.style.display = "block";
-            } else {
-                x.style.display = "none";
-            }
-        }
-        function gen(){
-            var y = document.getElementById("myDIV1");
-            if (y.style.display === "none") {
-                y.style.display = "block";
-            } else {
-                y.style.display = "none";
-            }
-        }
-        function mr(){
-            var z = document.getElementById("myDIV2");
-            if (z.style.display === "none") {
-                z.style.display = "block";
-            } else {
-                z.style.display = "none";
-            }
-        }
-        function nc(){
-            var q = document.getElementById("myDIV3");
-            if (q.style.display === "none") {
-                q.style.display = "block";
-            } else {
-                q.style.display = "none";
-            }
-        }
-
-        function ov(){
+        
+        // Handle clicks outside modal content
+        window.onclick = function(event) {
+            Object.values(modals).forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            });
+        };
+        
+        // Button handlers for modals
+        document.getElementById("ps").onclick = function() {
+            modals.ps.style.display = "block";
+        };
+        document.getElementById("gen").onclick = function() {
+            modals.gen.style.display = "block";
+        };
+        document.getElementById("mr").onclick = function() {
+            modals.mr.style.display = "block";
+        };
+        document.getElementById("nc").onclick = function() {
+            modals.nc.style.display = "block";
+        };
+        
+        // Toggle overview
+        function ov() {
             var k = document.getElementById("ov");
-            if (k.style.display === "none") {
-                k.style.display = "block";
-            } else {
-                k.style.display = "none";
-            }
+            k.style.display = k.style.display === "none" ? "block" : "none";
         }
-
+        
+        // Add resize listener for plots
+        window.addEventListener('resize', function() {
+            const plots = ['progress-plot', 'cluster-plot'];
+            plots.forEach(id => {
+                const plot = document.getElementById(id);
+                if (plot && plot.data) {
+                    Plotly.Plots.resize(plot);
+                }
+            });
+        });
+        
+        // Genetic Algorithm Variables
         let expressionData = [];
         let geneNames = [];
         let sampleNames = [];
         let worker = null;
-
+        
+        // Error display function
         function showError(message) {
-            document.getElementById('error').textContent = message;
-            setTimeout(() => document.getElementById('error').textContent = '', 5000);
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
         }
-
+        
+        // Parse uploaded file
         function parseTXTFile(content) {
             const lines = content.split('\n');
             const data = [];
@@ -498,7 +479,7 @@ document.getElementById("nc").onclick = function() {
                 const sampleCount = firstDataLine.split('\t').length - 2;
                 sampleNames = Array.from({length: sampleCount}, (_, i) => `Sample ${i + 1}`);
             }
-
+            
             lines.forEach(line => {
                 const parts = line.trim().split('\t');
                 if (parts.length < 3) return; // Skip invalid lines
@@ -512,89 +493,104 @@ document.getElementById("nc").onclick = function() {
                 geneNames.push(geneName);
                 data.push(values);
             });
-
+            
             return { data, samples: sampleNames };
         }
-
+        
+        // File upload handler
         document.getElementById('softFile').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
-
+            
             const reader = new FileReader();
             reader.onload = function(e) {
-                const { data, samples } = parseTXTFile(e.target.result);
-                if (data.length === 0) {
-                    showError('Invalid file format or no data found');
-                    return;
+                try {
+                    const { data, samples } = parseTXTFile(e.target.result);
+                    if (data.length === 0) {
+                        showError('Invalid file format or no data found');
+                        return;
+                    }
+                    expressionData = data;
+                    sampleNames = samples;
+                } catch (error) {
+                    showError('Error parsing file: ' + error.message);
                 }
-                expressionData = data;
-                sampleNames = samples;
             };
             reader.readAsText(file);
         });
-
-
+        
+        // Initialize Web Worker
         function initializeWorker() {
             const workerCode = `
                 self.onmessage = function(e) {
                     const { expressionData, params } = e.data;
                     
+                    // Initialize population
                     function initializePopulation(popSize, numGenes, numClusters) {
                         return Array.from({ length: popSize }, () => {
                             const individual = [];
                             for (let i = 0; i < numGenes; i++) {
-                                individual.push(i < numClusters ? i % numClusters : Math.floor(Math.random() * numClusters));
+                                individual.push(Math.floor(Math.random() * numClusters));
                             }
-                            return individual.sort(() => Math.random() - 0.5);
+                            return individual;
                         });
                     }
-                        function crossover(parent1, parent2) {
-                const point = Math.floor(Math.random() * parent1.length);
-                return [
-                    [...parent1.slice(0, point), ...parent2.slice(point)],
-                    [...parent2.slice(0, point), ...parent1.slice(point)]
-                ];
-            }
-
-            // Add mutate function
-            function mutate(individual, rate, numClusters) {
-                return individual.map(gene => 
-                    Math.random() < rate ? Math.floor(Math.random() * numClusters) : gene
-                );
-            }
-
+                    
+                    // Crossover function
+                    function crossover(parent1, parent2) {
+                        const point = Math.floor(Math.random() * parent1.length);
+                        return [
+                            [...parent1.slice(0, point), ...parent2.slice(point)],
+                            [...parent2.slice(0, point), ...parent1.slice(point)]
+                        ];
+                    }
+                    
+                    // Mutation function
+                    function mutate(individual, rate, numClusters) {
+                        return individual.map(gene => 
+                            Math.random() < rate ? Math.floor(Math.random() * numClusters) : gene
+                        );
+                    }
+                    
+                    // Calculate Euclidean distance
                     function squaredDistance(a, b) {
                         return a.reduce((sum, val, i) => sum + (val - b[i]) ** 2, 0);
                     }
-
+                    
+                    // Calculate fitness components
                     function calculateFitnessComponents(individual, numClusters) {
                         const clusters = Array.from({ length: numClusters }, () => []);
                         individual.forEach((cluster, index) => {
                             clusters[cluster].push(expressionData[index]);
                         });
-
+                        
                         const clusterMeans = clusters.map(cluster => {
                             if (cluster.length === 0) return null;
                             return cluster[0].map((_, i) => 
                                 cluster.reduce((sum, p) => sum + p[i], 0) / cluster.length
                             );
                         });
-
+                        
                         let intra = 0;
                         individual.forEach((cluster, i) => {
-                            intra += squaredDistance(expressionData[i], clusterMeans[cluster]);
+                            if (clusterMeans[cluster]) {
+                                intra += squaredDistance(expressionData[i], clusterMeans[cluster]);
+                            }
                         });
-
+                        
                         let inter = 0;
                         for (let i = 0; i < clusterMeans.length; i++) {
                             for (let j = i + 1; j < clusterMeans.length; j++) {
-                                inter += squaredDistance(clusterMeans[i], clusterMeans[j]);
+                                if (clusterMeans[i] && clusterMeans[j]) {
+                                    inter += squaredDistance(clusterMeans[i], clusterMeans[j]);
+                                }
                             }
                         }
-
+                        
                         return { intra, inter };
                     }
-
+                    
+                    // Selection function
                     function select(population, fitnessScores) {
                         return population.map(() => {
                             const candidates = Array.from({ length: 4 }, 
@@ -604,13 +600,15 @@ document.getElementById("nc").onclick = function() {
                             );
                         });
                     }
-
-                   function geneticAlgorithm() {
+                    
+                    // Genetic Algorithm
+                    function geneticAlgorithm() {
                         const { populationSize, generations, mutationRate, numClusters } = params;
                         let population = initializePopulation(populationSize, expressionData.length, numClusters);
-                        let bestSolution = null, bestFitness = -Infinity;
+                        let bestSolution = null;
+                        let bestFitness = -Infinity;
                         const intraHistory = [];
-
+                        
                         for (let gen = 0; gen < generations; gen++) {
                             const fitnessData = population.map(ind => {
                                 const { intra, inter } = calculateFitnessComponents(ind, numClusters);
@@ -624,152 +622,319 @@ document.getElementById("nc").onclick = function() {
                                 bestFitness = currentBest;
                                 bestSolution = population[fitnessScores.indexOf(currentBest)];
                             }
-
+                            
                             // Store intra-cluster variance
                             intraHistory.push(fitnessData[fitnessScores.indexOf(currentBest)].intra);
-
+                            
                             // Evolutionary operations
                             const selected = select(population, fitnessScores);
                             const newPopulation = [];
                             for (let i = 0; i < selected.length; i += 2) {
-                                const [child1, child2] = crossover(selected[i], selected[i + 1]);
-                                newPopulation.push(mutate(child1, mutationRate, numClusters));
-                                if (child2) newPopulation.push(mutate(child2, mutationRate, numClusters));
+                                if (i + 1 < selected.length) {
+                                    const [child1, child2] = crossover(selected[i], selected[i + 1]);
+                                    newPopulation.push(mutate(child1, mutationRate, numClusters));
+                                    newPopulation.push(mutate(child2, mutationRate, numClusters));
+                                }
                             }
                             population = newPopulation.slice(0, populationSize);
                         }
-
-                        postMessage({ 
+                        
+                        return { 
                             solution: bestSolution, 
                             fitness: bestFitness,
                             intraHistory 
-                        });
+                        };
                     }
-
-                    postMessage(geneticAlgorithm());
+                    
+                    // Run GA and return results
+                    const result = geneticAlgorithm();
+                    postMessage(result);
                 };
             `;
-
-           
-    const blob = new Blob([workerCode], { type: 'application/javascript' });
-    const worker = new Worker(URL.createObjectURL(blob));
-    worker.onerror = function(e) {
-        console.error('Worker error:', e);
-        showError('Worker error: ' + e.message);
-    };
-    
-    return worker;
-    
-        }
-
-
-        function visualizeClusters(intraHistory) {
-    const trace = {
-        x: Array.from({length: intraHistory.length}, (_, i) => i + 1),
-        y: intraHistory,
-        mode: 'lines+markers',
-        type: 'scatter',
-        name: 'Internal Variance',
-        line: { color: '#3498db' },
-        marker: { size: 6 }
-    };
-
-    const layout = {
-        title: 'Optimization Progress',
-        xaxis: { title: 'Generations' },
-        yaxis: { title: 'Internal Cluster Variance' },
-        showlegend: true
-    };
-
-    const plotDiv = document.getElementById('plot');
-    Plotly.purge(plotDiv);
-    Plotly.newPlot(plotDiv, [trace], layout);
-        }
-
-        // Update message handler
-        worker.onmessage = function(e) {
-            loader.style.display = 'none';
-            const { solution, fitness, intraHistory } = e.data;
             
-            if (!solution || fitness === -Infinity) {
-                showError('No valid solution found. Try adjusting parameters or check data');
-                return;
+            try {
+                const blob = new Blob([workerCode], { type: 'application/javascript' });
+                const newWorker = new Worker(URL.createObjectURL(blob));
+                newWorker.onerror = function(e) {
+                    console.error('Worker error:', e);
+                    showError('Worker error: ' + e.message);
+                };
+                return newWorker;
+            } catch (e) {
+                console.error('Worker creation failed:', e);
+                showError('Failed to create worker: ' + e.message);
+                return null;
             }
-
-            // Update results display
-            document.getElementById('results').innerHTML = `
-                <h3>Clustering Results</h3>
-                <div class="result-card">
-                    <h4>Algorithm Performance</h4>
-                    <p><strong>Final Variance:</strong> ${intraHistory[intraHistory.length-1].toFixed(4)}</p>
-                    <p><strong>Generations:</strong> ${intraHistory.length}</p>
-                </div>
-            `;
-
-            visualizeClusters(intraHistory);
-        };
-
-
-   function runGA() {
-    const loader = document.getElementById('loader');
-    try {
-        if (expressionData.length === 0) {
-            showError('Please upload a valid file first');
-            return;
         }
-
-        loader.style.display = 'block';
-        document.getElementById('results').style.display = "block";
-        document.getElementById('results').innerHTML = '';
         
-        if (worker) worker.terminate();
-        worker = initializeWorker();
-
-        // Set message handler BEFORE posting message
-        worker.onmessage = function(e) {
-            loader.style.display = 'none';
-            const { solution, fitness, intraHistory } = e.data;
+        // Visualization functions
+        function visualizeClusters(intraHistory) {
+            const trace = {
+                x: Array.from({length: intraHistory.length}, (_, i) => i + 1),
+                y: intraHistory,
+                mode: 'lines+markers',
+                type: 'scatter',
+                name: 'Internal Variance',
+                line: { color: '#3498db', width: 3 },
+                marker: { size: 8 }
+            };
             
-            if (!solution || fitness === -Infinity) {
-                showError('No valid solution found. Try adjusting parameters or check data');
-                return;
+            const layout = {
+                title: 'Optimization Progress',
+                xaxis: { title: 'Generations' },
+                yaxis: { title: 'Internal Cluster Variance' },
+                showlegend: true,
+                margin: { l: 60, r: 30, t: 60, b: 60 }
+            };
+            
+            Plotly.newPlot('progress-plot', [trace], layout);
+        }
+        
+        function visualizeGeneClusters(solution, transformed) {
+            const traces = [];
+            const clusters = [...new Set(solution)].sort((a, b) => a - b);
+            
+            // Define a color palette for clusters
+            const colors = [
+                '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
+                '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'
+            ];
+            
+            clusters.forEach((c, idx) => {
+                const indices = solution.map((clust, geneIdx) => clust === c ? geneIdx : -1)
+                                      .filter(index => index !== -1);
+                const x = indices.map(idx => transformed[idx][0]);
+                const y = indices.map(idx => transformed[idx][1]);
+                
+                traces.push({
+                    x, y,
+                    mode: 'markers',
+                    name: `Cluster ${c+1}`,
+                    marker: {
+                        size: 12,
+                        color: colors[idx % colors.length],
+                        line: { width: 1, color: 'white' }
+                    }
+                });
+            });
+            
+            const layout = {
+                title: 'Gene Expression Clusters',
+                xaxis: { 
+                    title: 'Principal Component 1 (Direction of Maximum Variance)',
+                },
+                yaxis: { 
+                    title: 'Principal Component 2 (Secondary Variance Direction)',
+                },
+                hovermode: 'closest',
+                showlegend: true,
+                legend: { 
+                    orientation: 'h',
+                    y: -0.2
+                },
+                margin: { l: 60, r: 30, t: 60, b: 80 }
+            };
+            
+            Plotly.newPlot('cluster-plot', traces, layout);
+        }
+        
+        // PCA functions
+        function dotProduct(a, b) {
+            let sum = 0;
+            for (let i = 0; i < a.length; i++) {
+                sum += a[i] * b[i];
             }
-
-            // Update results display
-            document.getElementById('results').innerHTML = `
-                <h3>Clustering Results</h3>
-                <div class="result-card">
-                    <h4>Algorithm Performance</h4>
-                     <img src="images/iv.png" width="500" height="400" style="vertical-align:middle;margin:8px">
+            return sum;
+        }
+        
+        function normalizeVector(v) {
+            const len = Math.sqrt(v.reduce((sum, x) => sum + x*x, 0));
+            return len === 0 ? v : v.map(x => x / len);
+        }
+        
+        function multiplyMatrixVector(matrix, vector) {
+            return matrix.map(row => {
+                return row.reduce((sum, val, j) => sum + val * vector[j], 0);
+            });
+        }
+        
+        function powerIteration(matrix, options = {}) {
+            let n = matrix.length;
+            let v = Array(n).fill(0).map(() => Math.random() - 0.5);
+            
+            if (options.orthogonalTo) {
+                const u = options.orthogonalTo;
+                const proj = dotProduct(v, u);
+                for (let i = 0; i < n; i++) {
+                    v[i] = v[i] - proj * u[i];
+                }
+            }
+            
+            v = normalizeVector(v);
+            
+            for (let iter = 0; iter < 100; iter++) {
+                let newV = multiplyMatrixVector(matrix, v);
+                
+                if (options.orthogonalTo) {
+                    const u = options.orthogonalTo;
+                    const proj = dotProduct(newV, u);
+                    for (let i = 0; i < n; i++) {
+                        newV[i] = newV[i] - proj * u[i];
+                    }
+                }
+                
+                newV = normalizeVector(newV);
+                let diff = 0;
+                for (let i = 0; i < n; i++) {
+                    diff += Math.abs(newV[i] - v[i]);
+                }
+                
+                v = newV;
+                if (diff < 1e-6) break;
+            }
+            
+            return v;
+        }
+        
+        function pca(data, nComponents = 2) {
+            if (data.length === 0) return [];
+            
+            const n = data.length;
+            const d = data[0].length;
+            const means = new Array(d).fill(0);
+            
+            // Calculate means
+            for (let j = 0; j < d; j++) {
+                for (let i = 0; i < n; i++) {
+                    means[j] += data[i][j];
+                }
+                means[j] /= n;
+            }
+            
+            // Center data
+            const centered = data.map(row => 
+                row.map((val, j) => val - means[j])
+            );
+            
+            // Compute covariance matrix
+            const cov = Array.from({ length: d }, () => new Array(d).fill(0));
+            
+            for (let k = 0; k < n; k++) {
+                const row = centered[k];
+                for (let i = 0; i < d; i++) {
+                    for (let j = 0; j < d; j++) {
+                        cov[i][j] += row[i] * row[j];
+                    }
+                }
+            }
+            
+            for (let i = 0; i < d; i++) {
+                for (let j = 0; j < d; j++) {
+                    cov[i][j] /= (n - 1);
+                }
+            }
+            
+            // Compute eigenvectors
+            const vectors = [];
+            for (let i = 0; i < nComponents; i++) {
+                const options = i > 0 ? { orthogonalTo: vectors[i-1] } : {};
+                vectors.push(powerIteration(cov, options));
+            }
+            
+            // Project data
+            return centered.map(gene => {
+                return vectors.map(vector => dotProduct(gene, vector));
+            });
+        }
+        
+        // Run Genetic Algorithm
+        function runGA() {
+            const loader = document.getElementById('loader');
+            try {
+                if (expressionData.length === 0) {
+                    showError('Please upload a valid file first');
+                    return;
+                }
+                
+                // Show loader
+                loader.style.display = 'block';
+                document.getElementById('results-text').innerHTML = '';
+                
+                // Terminate existing worker
+                if (worker) {
+                    worker.terminate();
+                    worker = null;
+                }
+                
+                // Create new worker
+                worker = initializeWorker();
+                if (!worker) return;
+                
+                // Set worker message handler
+                worker.onmessage = function(e) {
+                    loader.style.display = 'none';
                     
-                    <p><strong>Best Fitness:</strong> ${fitness}</p>
-                    <p><strong>Generations:</strong> ${intraHistory.length}</p>
-                </div>
-            `;
-
-            visualizeClusters(intraHistory);
-        };
-
-        // Post message AFTER setting handler
-        worker.postMessage({
-            expressionData: expressionData,
-            params: {
-                populationSize: parseInt(document.getElementById('populationSize').value) || 50,
-                generations: parseInt(document.getElementById('generations').value) || 100,
-                mutationRate: (parseInt(document.getElementById('mutationRate').value) || 10) / 100,
-                numClusters: Math.min(
-                    Math.max(2, parseInt(document.getElementById('numClusters').value) || 4),
-                    expressionData.length - 1
-                )
+                    if (!e.data) {
+                        showError('No data received from worker');
+                        return;
+                    }
+                    
+                    const { solution, fitness, intraHistory } = e.data;
+                    
+                    if (!solution || fitness === -Infinity) {
+                        showError('No valid solution found. Try adjusting parameters or check data');
+                        return;
+                    }
+                    
+                    // Display results
+                    document.getElementById('results-text').innerHTML = `
+                        <h3>Clustering Results</h3>
+                        <div class="result-card">
+                            <h4>Algorithm Performance</h4>
+                            
+                     <img src="iv.png" width="500" height="400" style="vertical-align:middle;margin:8px">
+                            <p><strong>Best Fitness:</strong> ${fitness}</p>
+                            <p><strong>Generations:</strong> ${intraHistory.length}</p>
+                            <p><strong>Genes Clustered:</strong> ${solution.length}</p>
+                            <p><strong>Clusters Created:</strong> ${new Set(solution).size}</p>
+                        </div>
+                    `;
+                    
+                    // Visualize optimization progress
+                    visualizeClusters(intraHistory);
+                    
+                    // Perform PCA and visualize clusters
+                    try {
+                        const transformed = pca(expressionData, 2);
+                        visualizeGeneClusters(solution, transformed);
+                    } catch (e) {
+                        console.error('PCA error:', e);
+                        showError('Error visualizing clusters: ' + e.message);
+                    }
+                    
+                    // Show overview
+                    ov();
+                };
+                
+                // Send data to worker
+                worker.postMessage({
+                    expressionData: expressionData,
+                    params: {
+                        populationSize: parseInt(document.getElementById('populationSize').value) || 50,
+                        generations: parseInt(document.getElementById('generations').value) || 100,
+                        mutationRate: (parseInt(document.getElementById('mutationRate').value) || 10) / 100,
+                        numClusters: Math.min(
+                            Math.max(2, parseInt(document.getElementById('numClusters').value) || 4),
+                            expressionData.length - 1
+                        )
+                    }
+                });
+                
+            } catch (error) {
+                if (loader) loader.style.display = 'none';
+                showError(`Error: ${error.message}`);
             }
-        });
-
-    } catch (error) {
-        loader.style.display = 'none';
-        showError(`Error: ${error.message}`);
-    }
-}
+        }
     </script>
 </body>
 </html>
-
